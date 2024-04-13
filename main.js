@@ -4,7 +4,6 @@ ctx.imageSmoothingEnabled = false;
 fetch('./points.json')
   .then(response => response.json())
   .then(data => {
-    // Use the JSON data here
     for (let i = 0; i < data.cords.length; i++) {
         points.push(new Point(data.cords[i].latitude,data.cords[i].longitude))
     }
