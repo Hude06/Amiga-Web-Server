@@ -4,9 +4,6 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 // Load existing data from JSON file, if any
-app.use(cors({
-    origin: 'http://judemakes.dev'
-  }));
 let cordsData = loadCordsData();
 // Define route to handle latitude and longitude
 app.get('/cords', (req, res) => {
