@@ -34,7 +34,7 @@ app.get('/cords', (req, res) => {
 // Function to load data from JSON file
 function loadCordsData() {
     try {
-        const data = fs.readFileSync('../points.json');
+        const data = fs.readFileSync('./points.json');
         return JSON.parse(data);
     } catch (err) {
         console.error('Error reading cordsData.json:', err);
