@@ -1,29 +1,19 @@
 const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 // Load existing data from JSON file, if any
 let cordsData = loadCordsData();
 // Define route to handle latitude and longitude
-const corsOptions = {
-    origin: '*', // You can replace '*' with your specific domain
-};
-  
-app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/cords', (req, res) => {
   const latitude = req.query.latitude;
   const longitude = req.query.longitude;
-
   // Update data with new coordinates
   if (latitude !== undefined && longitude !== undefined) {
     cordsData.cords.push({ latitude: latitude, longitude: longitude });
     saveCordsData(cordsData);
   }
-
   res.send('Latitude: ' + latitude + ', Longitude: ' + longitude + ' added successfully.');
 });
 
