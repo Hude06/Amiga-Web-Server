@@ -7,7 +7,6 @@ let cordsData = loadCordsData();
 
 // Define route to handle latitude and longitude
 app.get('/cords', (req, res) => {
-    res.send("Loading")
     let latitude = req.query.latitude;
     let longitude = req.query.longitude;
 
