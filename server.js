@@ -29,12 +29,7 @@ app.get('/cords', (req, res) => {
 
 // Define route to reset data
 app.get('/reset', (req, res) => {
-  // Overwrite the data with an empty array
-  data.cords = [];
-  // Save the empty data
-  saveCordsData(data);
-  // Send a success response
-  res.send('Data reset successfully.');
+  res.send("Reset")
 });
 
 // Function to load data from JSON file
