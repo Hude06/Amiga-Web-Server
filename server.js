@@ -8,12 +8,24 @@ let cordsData = loadCordsData();
 
 // Define route to handle latitude and longitude
 app.get('/cords', (req, res) => {
-    const latitude = req.query.latitude;
-    const longitude = req.query.longitude;
+    let latitude = req.query.latitude;
+    let longitude = req.query.longitude;
 
     // Update data with new coordinates
     if (latitude !== undefined && longitude !== undefined) {
-        cordsData.cords.push({ latitude: latitude, longitude: longitude});
+        if (latitude > 90) {
+            latitude = 90
+        }
+        if (latitude < -90) {
+            latitude = -90
+        }
+        if (longitude > 180) {
+            longitude = 180
+        }
+        if (longitude < -180) {
+            longitude = -180
+        }
+        cordsData.cords.push({ latitude: parseFloat(latitude), longitude: parseFloat(longitude)});
         saveCordsData(cordsData);
     }
 

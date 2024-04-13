@@ -28,6 +28,7 @@ class Point {
 }
 let points = []
 function drawLine(point1,point2) {
+    ctx.strokeStyle = "Red"
     ctx.beginPath(); // Start a new path
     ctx.moveTo(point1.scalledX, point1.scalledY); // Move the pen to (30, 50)
     ctx.lineTo(point2.scalledX, point2.scalledY); // Draw a line to (150, 100)
