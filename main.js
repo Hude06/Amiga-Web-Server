@@ -1,7 +1,6 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
-let resetButt = document.getElementById("reset")
 fetch('./points.json')
   .then(response => response.json())
   .then(data => {
@@ -28,7 +27,6 @@ class Point {
     }
 }
 let points = []
-resetButt.addEventListener("click",function() {})
 function drawLine(point1,point2) {
     ctx.beginPath(); // Start a new path
     ctx.moveTo(point1.scalledX, point1.scalledY); // Move the pen to (30, 50)
