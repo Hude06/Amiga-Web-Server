@@ -30,7 +30,7 @@ class Point {
 }
 let points = []
 resetButt.addEventListener("click", function() {
-    fetch('http://localhost:3000/reset', {
+    fetch('http://judemakes.dev:3000/reset', {
         method: 'GET', // Change method to GET
         headers: {
             'Content-Type': 'application/json'
