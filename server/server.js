@@ -1,13 +1,13 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
-const port = 3000;
-
+const port = 4000;
 // Load existing data from JSON file, if any
 let cordsData = loadCordsData();
 
 // Define route to handle latitude and longitude
 app.get('/cords', (req, res) => {
+    res.send("Loading")
     let latitude = req.query.latitude;
     let longitude = req.query.longitude;
 
