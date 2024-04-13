@@ -2,7 +2,6 @@ let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 let resetButt = document.getElementById("reset")
-
 fetch('./points.json')
   .then(response => response.json())
   .then(data => {
@@ -29,24 +28,7 @@ class Point {
     }
 }
 let points = []
-resetButt.addEventListener("click", function() {
-    fetch('http://judemakes.dev/Amiga:3000/reset', {
-        method: 'GET', // Change method to GET
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        console.log('Reset successful');
-    })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
-});
-
+resetButt.addEventListener("click",function() {})
 function drawLine(point1,point2) {
     ctx.beginPath(); // Start a new path
     ctx.moveTo(point1.scalledX, point1.scalledY); // Move the pen to (30, 50)
