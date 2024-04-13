@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const cors = require('cors');
+import bodyParser from 'body-parser';
 const app = express();
 const port = 3000;
 // Load existing data from JSON file, if any
