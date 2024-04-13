@@ -1,5 +1,6 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = false;
 fetch('./points.json')
   .then(response => response.json())
   .then(data => {
