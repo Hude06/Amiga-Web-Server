@@ -1,6 +1,4 @@
-// Import the Express module
 const express = require('express');
-
 // Create an Express application
 const app = express();
 let droneOnline = false;
@@ -12,9 +10,13 @@ function droneIsOnline() {
         droneIsOnline(); // Call the function recursively after 6 seconds
     }, 6000); // 6000 milliseconds = 6 seconds
 }
-
 droneIsOnline(); // Call the function to start the interval
-
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
 app.get('/', (req, res) => {
   res.send('Hello, world!');
 });
