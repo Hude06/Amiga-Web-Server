@@ -1,41 +1,47 @@
 import serial
 import sys
+import time
+import math
 import json
-
-port = "/dev/tty.usbmodem11301"
-baudrate = 9600
+port = "/dev/tty.usbmodem101"
+baudrate = 19200
 ser = serial.Serial(port, baudrate, timeout=0.001)
+url_post = "https://judemakes.dev/posts"
+def adjust_gps(latitude, longitude, accuracy):
+    # Convert accuracy from degrees to meters
+    meters_accuracy = accuracy * 111139
 
-output_file = "points.json"  # File to save data in JSON format
-coords = []  # List to store coordinates
+    # Generate random offsets within the accuracy circle
+    # Adjust latitude and longitude
+    adjusted_lat = latitude + accuracy
+    adjusted_lon = longitude - accuracy
+    # adjusted_lat = latitude + meters_accuracy / 111139
+    # adjusted_lon = longitude - meters_accuracy / (111139 * math.cos(latitude * math.pi / 180))
 
-with open(output_file, "a") as file:
-    while True:
-        # Read latitude and longitude values separately
-        latitude_str = ser.readline().decode('utf-8').strip()
-        longitude_str = ser.readline().decode('utf-8').strip()
+    return {'latitude': adjusted_lat, 'longitude': adjusted_lon}
 
-        # Check if latitude or longitude string is empty
-        if not latitude_str or not longitude_str:
-            continue  # Skip empty lines
+accuracy = 0.000267  # Horizontal accuracy in degrees
 
-        try:
-            # Convert latitude and longitude strings to float values
-            latitude = float(latitude_str)
-            longitude = float(longitude_str)
-
-            # Print data to console
-            print("Latitude:", latitude)
-            print("Longitude:", longitude)
-
-            # Append coordinates to the list
-            coords.append({"latitude": latitude, "longitude": longitude})
-
-            # Write coords to file in JSON format
-            file.seek(0)  # Move to the beginning of the file
-            file.truncate()  # Clear file contents
-            file.write(json.dumps({"cords": coords}, indent=2))  # Write coords to file
-            file.flush()  # Ensure data is written immediately
-        except ValueError:
-            print("Error: Invalid latitude or longitude value")
-            continue  # Skip lines with invalid values
+while True:
+    received_data = ser.readline().decode('utf-8').strip()
+    if received_data == "Waiting for fix...":
+        print("Looking for GPS Satellites")
+    else:
+        splitData = received_data.split(",")
+        if len(splitData) >= 2:  # Check if splitData contains at least two elements
+            latitude = float(splitData[0])
+            longitude = float(splitData[1])
+            adjusted_gps = adjust_gps(latitude, longitude, accuracy)
+            print("Adjusted Latitude:", adjusted_gps['latitude'],"Original Latitude: ",splitData[0])
+            print("Adjusted Longitude:", adjusted_gps['longitude'],"Original Longitude: ",splitData[1])
+            new_data = {
+                "id": 1,
+                "latitude": adjusted_gps['latitude'],
+                "longitude": adjusted_gps['longitude']
+            }      
+            # with open("points.json", "a") as file:
+            #     json.dump(new_data, file)
+            #     file.write("\n")  # Append a newline after each JSON object
+        else:
+            print("Invalid data format:", received_data)
+    time.sleep(1)  # Add a 1-second delay between iterations
