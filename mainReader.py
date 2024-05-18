@@ -3,22 +3,21 @@ import sys
 import time
 import math
 import json
-port = "/dev/tty.usbmodem101"
+
+port = "/dev/tty.usbmodem11401"
 baudrate = 19200
 ser = serial.Serial(port, baudrate, timeout=0.001)
 url_post = "https://judemakes.dev/posts"
+
 def adjust_gps(latitude, longitude, accuracy):
     # Convert accuracy from degrees to meters
-    meters_accuracy = accuracy * 111139
-
-    # Generate random offsets within the accuracy circle
-    # Adjust latitude and longitude
-    adjusted_lat = latitude + accuracy
-    adjusted_lon = longitude - accuracy
-    # adjusted_lat = latitude + meters_accuracy / 111139
-    # adjusted_lon = longitude - meters_accuracy / (111139 * math.cos(latitude * math.pi / 180))
-
-    return {'latitude': adjusted_lat, 'longitude': adjusted_lon}
+    if accuracy:
+        meters_accuracy = accuracy * 111139
+        adjusted_lat = latitude + (accuracy / 111139)  # Adjust latitude
+        adjusted_lon = longitude - (accuracy / (111139 * math.cos(math.radians(latitude))))  # Adjust longitude
+        return {'latitude': adjusted_lat, 'longitude': adjusted_lon}
+    else:
+        return {'latitude': latitude, 'longitude': longitude}
 
 accuracy = 0.000267  # Horizontal accuracy in degrees
 
@@ -29,11 +28,11 @@ while True:
     else:
         splitData = received_data.split(",")
         if len(splitData) >= 2:  # Check if splitData contains at least two elements
-            latitude = float(splitData[0])
-            longitude = float(splitData[1])
+            latitude = float(splitData[0])  # Latitude is at index 1
+            longitude = float(splitData[1])  # Longitude is at index 2
             adjusted_gps = adjust_gps(latitude, longitude, accuracy)
-            print("Adjusted Latitude:", adjusted_gps['latitude'],"Original Latitude: ",splitData[0])
-            print("Adjusted Longitude:", adjusted_gps['longitude'],"Original Longitude: ",splitData[1])
+            print("Adjusted Latitude:", adjusted_gps['latitude'], "Original Latitude: ", latitude)
+            print("Adjusted Longitude:", adjusted_gps['longitude'], "Original Longitude: ", longitude)
             new_data = {
                 "id": 1,
                 "latitude": adjusted_gps['latitude'],
