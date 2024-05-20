@@ -39,9 +39,7 @@ app.get('/gps', (req, res) => {
             console.error('Error writing data to file:', err);
         }
     });
-
     // Here you can do something with the received GPS point
-
     res.json({ message: 'GPS point received successfully' });
 });
 

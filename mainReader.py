@@ -6,9 +6,19 @@ import json
 import requests
 port = "/dev/tty.usbmodem11401"
 baudrate = 19200
+#setting up serial with the micro controller
 ser = serial.Serial(port, baudrate, timeout=0.001)
 url = 'http://apps.hude.earth:4300/ImOnline'
-
+GPSUrl = "http://apps.hude.earth:4300/gps"
+def send_gps(latitude,longitude):
+        #Sending GPS dat to my server and then back down to amiga
+        params = {
+            'latitude': latitude,
+            'longitude': longitude
+        }
+        response = requests.get(GPSUrl, params=params)
+        print("Sending Gps data", params)
+        print(response)
 def adjust_gps(latitude, longitude, accuracy):
     # Convert accuracy from degrees to meters
     if accuracy != 0:
@@ -21,18 +31,22 @@ def adjust_gps(latitude, longitude, accuracy):
 
 accuracy = 0
 while True:
+    #Reading the main line from the serial port
     received_data = ser.readline().decode('utf-8').strip()
     if received_data == "Waiting for fix...":
         print("Looking for GPS Satellites")
     else:
+        #If the data seems correct then process it
         splitData = received_data.split(",")
         if len(splitData) >= 2:  # Check if splitData contains at least two elements
             latitude = float(splitData[0])  # Latitude is at index 1
             longitude = float(splitData[1])  # Longitude is at index 2
             adjusted_gps = adjust_gps(latitude, longitude,accuracy)
             response = requests.get(url)
+            #Printing out procesed GPS data
             print("Adjusted Latitude:", adjusted_gps['latitude'], "Original Latitude: ", latitude)
             print("Adjusted Longitude:", adjusted_gps['longitude'], "Original Longitude: ", longitude)
+            send_gps(latitude,longitude)
             new_data = {
                 "id": 1,
                 "latitude": adjusted_gps['latitude'],
