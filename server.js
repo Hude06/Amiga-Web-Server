@@ -1,3 +1,4 @@
+const { json } = require('body-parser');
 const express = require('express');
 const fs = require('fs');
 // Create an Express application
@@ -21,26 +22,26 @@ app.use((req, res, next) => {
 });
 app.get('/gps', (req, res) => {
     const { latitude, longitude } = req.query;
-    
-    if (!latitude || !longitude) {
-        return res.status(400).json({ error: 'Latitude and longitude are required' });
-    }
 
     console.log('Received GPS point:', { latitude, longitude });
 
-    const point = { latitude, longitude };
-    gpsData.push(point);
+    if (latitude || longitude){
+        const point = { latitude, longitude };
+        gpsData.push(point);
+        const jsonData = JSON.stringify(gpsData);
+        fs.writeFile('gps_data.json', jsonData, (err) => {
+            if (err) {
+                console.error('Error writing data to file:', err);
+            }
+        });
+        res.send(jsonData)
+    }    
 
-    const jsonData = JSON.stringify(gpsData);
-
+    if (!latitude || !longitude) {
+        res.send(JSON.stringify(gpsData))
+    }
     // Write JSON data to file
-    fs.writeFile('gps_data.json', jsonData, (err) => {
-        if (err) {
-            console.error('Error writing data to file:', err);
-        }
-    });
     // Here you can do something with the received GPS point
-    res.json({ message: 'GPS point received successfully' });
 });
 
 app.get('/ImOnline', (req, res) => {
