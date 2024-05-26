@@ -4,7 +4,7 @@ import time
 import math
 import json
 import requests
-port = "/dev/tty.usbmodem11401"
+port = "/dev/tty.usbmodem1101"
 baudrate = 19200
 #setting up serial with the micro controller
 ser = serial.Serial(port, baudrate, timeout=0.001)
