@@ -1,3 +1,5 @@
+#!/home/jude/Amiga-Web-Server/myenv/bin/python3
+
 import serial
 import sys
 import time
